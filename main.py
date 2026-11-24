@@ -15,13 +15,16 @@ TEXT = (
 )
 
 
-# The competition accepts texts of 1 to 200 characters.
+# The competition accepts texts of 1 to 200 characters, a single line,
+# and not whitespace-only.
 MIN_CHARS = 1
 MAX_CHARS = 200
 
 
-def check_length(text: str) -> None:
+def validate_entry(text: str) -> None:
     """Refuse to write a text that falls outside the entry gate."""
+    if not text.strip():
+        raise SystemExit("entry text must not be blank")
     n = len(text)
     if not MIN_CHARS <= n <= MAX_CHARS:
         raise SystemExit(
@@ -33,7 +36,7 @@ def check_length(text: str) -> None:
 
 
 def main() -> None:
-    check_length(TEXT)
+    validate_entry(TEXT)
     out = Path("/output/entry.txt")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(TEXT, encoding="utf-8")
